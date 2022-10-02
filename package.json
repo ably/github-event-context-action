@@ -1,0 +1,23 @@
+{
+  "name": "@ably/github-event-context-action",
+  "version": "1.0.0",
+  "description": "GitHub Action to collect conformed information on the workflow event context.",
+  "scripts": {
+    "lint": "eslint .",
+    "package": "ncc build server.js -o dist --source-map --license licenses.txt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "ably/github-event-context-action",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@actions/core": "^1.2.5",
+    "@actions/github": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.41",
+    "@vercel/ncc": "^0.27.0",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}

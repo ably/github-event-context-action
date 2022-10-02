@@ -1,0 +1,16 @@
+name: GitHub Event Context
+description: Collect conformed information on the workflow event context.
+author: Ably
+branding:
+  icon: info
+  color: green
+runs:
+  using: node16
+  main: dist/index.js
+outputs:
+  sha:
+    description: The SHA of the source commit.
+  url:
+    description: A GitHub URL pointing to location that makes sense given the contents of the description output.
+  description:
+    description: A description of the event context.
