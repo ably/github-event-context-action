@@ -62,10 +62,11 @@ if (context.eventName === 'pull_request') {
   process.exit(1);
 }
 
-core.debug(`sha: ${sha}`);
-core.debug(`url: ${url}`);
-core.debug(`description: ${description}`);
+const emit = (key, value) => {
+  core.info(`${key}: ${sha}`);
+  core.setOutput(key, value);
+};
 
-core.setOutput('sha', sha);
-core.setOutput('url', url);
-core.setOutput('description', description);
+emit('sha', sha);
+emit('url', url);
+emit('description', description);
