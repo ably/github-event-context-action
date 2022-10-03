@@ -10001,28 +10001,29 @@ const ref = createRef();
 
 let { sha } = context;
 let url = `https://github.com/${context.repo.owner}/${context.repo.repo}/`;
-let description;
+let title;
 if (context.eventName === 'pull_request') {
   sha = githubEvent.pull_request.head.sha;
   url += `pull/${githubEvent.pull_request.number}/`;
-  description = `Pull Request #${githubEvent.pull_request.number}`;
+  title = `Pull Request #${githubEvent.pull_request.number}`;
 } else if (context.eventName === 'push' && ref !== null && ref.type === 'head' && ref.name === 'main') {
-  description = 'Default Branch';
+  title = 'Default Branch';
 } else if (context.eventName === 'push' && ref !== null && ref.type === 'tag') {
   url += `releases/tag/${ref.name}/`;
-  description = `Tag: ${ref.name}`;
+  title = `Tag: ${ref.name}`;
 } else {
   core.setFailed("Error: this action can only be ran on a pull_request, a push to the 'main' branch, or a push of a tag");
   process.exit(1);
 }
 
-core.debug(`sha: ${sha}`);
-core.debug(`url: ${url}`);
-core.debug(`description: ${description}`);
+const emit = (key, value) => {
+  core.info(`${key}: ${sha}`);
+  core.setOutput(key, value);
+};
 
-core.setOutput('sha', sha);
-core.setOutput('url', url);
-core.setOutput('description', description);
+emit('sha', sha);
+emit('url', url);
+emit('title', title);
 
 
 /***/ }),
