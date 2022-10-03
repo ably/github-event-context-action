@@ -11,6 +11,6 @@ outputs:
   sha:
     description: The SHA of the source commit.
   url:
-    description: A GitHub URL pointing to location that makes sense given the contents of the description output.
-  description:
-    description: A description of the event context.
+    description: A GitHub URL pointing to location that makes sense given the contents of the title output.
+  title:
+    description: A label for the event context.
