@@ -63,7 +63,7 @@ if (context.eventName === 'pull_request') {
 }
 
 const emit = (key, value) => {
-  core.info(`${key}: ${sha}`);
+  core.info(`${key}: ${value}`);
   core.setOutput(key, value);
 };
 
