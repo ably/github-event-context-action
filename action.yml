@@ -14,3 +14,8 @@ outputs:
     description: A GitHub URL pointing to location that makes sense given the contents of the title output.
   title:
     description: A label for the event context.
+  build-metadata:
+    description: |
+      A string compatible with the constraints of SemVer build metadata (alphanumerics and hypens only, [0-9A-Za-z-]).
+      Examples: "tag-v-1-2-0" (tag), "PR123-d0b00a8" (pull request), "d0b00a8" (default branch).
+      See: https://semver.org/#spec-item-10

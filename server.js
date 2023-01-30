@@ -45,18 +45,26 @@ const createRef = () => {
 };
 const ref = createRef();
 
+const shortenSha = (sha) => sha.substring(0, 7);
+
 let { sha } = context;
 let url = `https://github.com/${context.repo.owner}/${context.repo.repo}/`;
 let title;
+let buildMetadata;
 if (context.eventName === 'pull_request') {
+  const { number } = githubEvent.pull_request;
   sha = githubEvent.pull_request.head.sha;
-  url += `pull/${githubEvent.pull_request.number}/`;
-  title = `Pull Request #${githubEvent.pull_request.number}`;
+  url += `pull/${number}/`;
+  title = `Pull Request #${number}`;
+  buildMetadata = `PR${number}-${shortenSha(sha)}`;
 } else if (context.eventName === 'push' && ref !== null && ref.type === 'head' && ref.name === 'main') {
   title = 'Default Branch';
+  buildMetadata = shortenSha(sha);
 } else if (context.eventName === 'push' && ref !== null && ref.type === 'tag') {
-  url += `releases/tag/${ref.name}/`;
-  title = `Tag: ${ref.name}`;
+  const { name } = ref;
+  url += `releases/tag/${name}/`;
+  title = `Tag: ${name}`;
+  buildMetadata = name.replace(/[^a-zA-Z0-9]/g, '-');
 } else {
   core.setFailed("Error: this action can only be ran on a pull_request, a push to the 'main' branch, or a push of a tag");
   process.exit(1);
@@ -70,3 +78,4 @@ const emit = (key, value) => {
 emit('sha', sha);
 emit('url', url);
 emit('title', title);
+emit('build-metadata', buildMetadata);
