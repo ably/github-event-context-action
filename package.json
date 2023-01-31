@@ -1,6 +1,6 @@
 {
   "name": "@ably/github-event-context-action",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "GitHub Action to collect conformed information on the workflow event context.",
   "scripts": {
     "lint": "eslint .",
