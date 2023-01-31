@@ -9971,6 +9971,23 @@ if (typeof githubRef !== 'string') {
 
 const githubEvent = JSON.parse(fs.readFileSync(githubEventPath, 'utf8'));
 
+// Emit information about the current runtime environment.
+// see: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+[
+  'GITHUB_ACTOR',
+  'GITHUB_BASE_REF',
+  'GITHUB_EVENT_NAME',
+  'GITHUB_EVENT_PATH',
+  'GITHUB_HEAD_REF',
+  'GITHUB_REF',
+  'GITHUB_REF_NAME',
+  'GITHUB_REF_TYPE',
+  'GITHUB_SHA',
+].forEach((envName) => {
+  const envValue = process.env[envName];
+  core.info(`${envName}: ${typeof envValue === 'string' ? `"${envValue}"` : envValue}`);
+});
+
 const createRef = () => {
   // githubRef is in the form 'refs/heads/branch_name' or 'refs/tags/tag_name'
   const components = githubRef.split('/');
