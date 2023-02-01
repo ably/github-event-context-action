@@ -9971,6 +9971,8 @@ if (typeof githubRef !== 'string') {
 
 const githubEvent = JSON.parse(fs.readFileSync(githubEventPath, 'utf8'));
 
+const logInput = (key, value) => core.info(`${key}: ${typeof value === 'string' ? `"${value}"` : value}`);
+
 // Emit information about the current runtime environment.
 // see: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
 [
@@ -9985,7 +9987,7 @@ const githubEvent = JSON.parse(fs.readFileSync(githubEventPath, 'utf8'));
   'GITHUB_SHA',
 ].forEach((envName) => {
   const envValue = process.env[envName];
-  core.info(`${envName}: ${typeof envValue === 'string' ? `"${envValue}"` : envValue}`);
+  logInput(envName, envValue);
 });
 
 const createRef = () => {
@@ -10015,6 +10017,12 @@ const createRef = () => {
   };
 };
 const ref = createRef();
+
+// Emit information about more runtime information we're gathering.
+logInput('context.eventName', context.eventName);
+logInput('context.sha', context.sha);
+logInput('ref.type', ref.type);
+logInput('ref.name', ref.name);
 
 const shortenSha = (sha) => sha.substring(0, 7);
 
