@@ -9990,6 +9990,11 @@ const logInput = (key, value) => core.info(`${key}: ${typeof value === 'string' 
   logInput(envName, envValue);
 });
 
+// TODO consider whether this function needs to be this complex, or even here at all...
+// As far as I can see, but I would like to observe this in all runtime contexts, what we compute as
+// the returned { name } is already available as process.env.GITHUB_REF_NAME.
+// I'm not so sure about { type } as for a 'workflow_dispatch' event we see that returned from here
+// as "head" while process.env.GITHUB_REF_TYPE is "branch".
 const createRef = () => {
   // githubRef is in the form 'refs/heads/branch_name' or 'refs/tags/tag_name'
   const components = githubRef.split('/');
@@ -10025,6 +10030,7 @@ logInput('ref.type', ref.type);
 logInput('ref.name', ref.name);
 
 const shortenSha = (sha) => sha.substring(0, 7);
+const conformAsBuildMetadata = (name) => name.replace(/[^a-zA-Z0-9]/g, '-');
 
 let { sha } = context;
 let url = `https://github.com/${context.repo.owner}/${context.repo.repo}/`;
@@ -10036,6 +10042,11 @@ if (context.eventName === 'pull_request') {
   url += `pull/${number}/`;
   title = `Pull Request #${number}`;
   buildMetadata = `PR${number}-${shortenSha(sha)}`;
+} else if (context.eventName === 'workflow_dispatch' && process.env.GITHUB_REF_TYPE === 'branch' && ref.type === 'head') {
+  const { name } = ref;
+  title = 'Manually Triggered'; // TODO add workflow name, or at least file name if not available
+  // TODO add to url so we point to this run of this workflow
+  buildMetadata = `${conformAsBuildMetadata(name)}-${shortenSha(sha)}`;
 } else if (context.eventName === 'push' && ref !== null && ref.type === 'head' && ref.name === 'main') {
   title = 'Default Branch';
   buildMetadata = shortenSha(sha);
@@ -10043,7 +10054,7 @@ if (context.eventName === 'pull_request') {
   const { name } = ref;
   url += `releases/tag/${name}/`;
   title = `Tag: ${name}`;
-  buildMetadata = name.replace(/[^a-zA-Z0-9]/g, '-');
+  buildMetadata = conformAsBuildMetadata(name);
 } else {
   core.setFailed("Error: this action can only be ran on a pull_request, a push to the 'main' branch, or a push of a tag");
   process.exit(1);
