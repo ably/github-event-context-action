@@ -36,6 +36,11 @@ const logInput = (key, value) => core.info(`${key}: ${typeof value === 'string' 
   logInput(envName, envValue);
 });
 
+// TODO consider whether this function needs to be this complex, or even here at all...
+// As far as I can see, but I would like to observe this in all runtime contexts, what we compute as
+// the returned { name } is already available as process.env.GITHUB_REF_NAME.
+// I'm not so sure about { type } as for a 'workflow_dispatch' event we see that returned from here
+// as "head" while process.env.GITHUB_REF_TYPE is "branch".
 const createRef = () => {
   // githubRef is in the form 'refs/heads/branch_name' or 'refs/tags/tag_name'
   const components = githubRef.split('/');
