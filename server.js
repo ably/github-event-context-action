@@ -30,7 +30,11 @@ const logInput = (key, value) => core.info(`${key}: ${typeof value === 'string' 
   'GITHUB_REF',
   'GITHUB_REF_NAME',
   'GITHUB_REF_TYPE',
+  'GITHUB_RUN_ATTEMPT',
+  'GITHUB_RUN_ID',
+  'GITHUB_RUN_NUMBER',
   'GITHUB_SHA',
+  'GITHUB_WORKFLOW',
 ].forEach((envName) => {
   const envValue = process.env[envName];
   logInput(envName, envValue);
@@ -90,8 +94,8 @@ if (context.eventName === 'pull_request') {
   buildMetadata = `PR${number}-${shortenSha(sha)}`;
 } else if (context.eventName === 'workflow_dispatch' && process.env.GITHUB_REF_TYPE === 'branch' && ref.type === 'head') {
   const { name } = ref;
-  title = 'Manually Triggered'; // TODO add workflow name, or at least file name if not available
-  // TODO add to url so we point to this run of this workflow
+  title = `Manually Triggered: ${process.env.GITHUB_WORKFLOW}`;
+  url += `actions/runs/${process.env.GITHUB_RUN_ID}/attempts/${process.env.GITHUB_RUN_ATTEMPT}`;
   buildMetadata = `${conformAsBuildMetadata(name)}-${shortenSha(sha)}`;
 } else if (context.eventName === 'push' && ref !== null && ref.type === 'head' && ref.name === 'main') {
   title = 'Default Branch';
