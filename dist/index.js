@@ -10030,8 +10030,11 @@ const ref = createRef();
 // Emit information about more runtime information we're gathering.
 logInput('context.eventName', context.eventName);
 logInput('context.sha', context.sha);
-logInput('ref.type', ref.type);
-logInput('ref.name', ref.name);
+
+if (ref) {
+  logInput('ref.type', ref.type);
+  logInput('ref.name', ref.name);
+}
 
 const shortenSha = (sha) => sha.substring(0, 7);
 const conformAsBuildMetadata = (name) => name.replace(/[^a-zA-Z0-9]/g, '-');
